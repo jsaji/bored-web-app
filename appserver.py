@@ -8,6 +8,4 @@ from bored_app.models import db
 
 if __name__ == '__main__':
     app = web_app
-    app.config.from_object('bored_app.config.BaseConfig')
-    db.init_app(app)
     app.run()
