@@ -1,26 +1,27 @@
-<!DOCTYPE html>
+{% extends 'header.html' %}
+{% block content %}
 
-<html>
-    <head>
-        <title>Bored.</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link rel="stylesheet" href="/static/main.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    </head>
+<div id="randomactivity">
+    <div class="">
+        <form action="{{ url_for('add_activity') }}" method="POST">
+            <input hidden type="number" value="{{ activity.activity_id }}" name='activity_id'>
+            <input hidden type="text" value="{{ activity.description }}" name='description'>
+            <input hidden type="text" value="{{ activity.activity_type }}" name='activity_type'>
+            <input hidden type="number" value="{{ activity.participants }}" name='participants'>
+            <input hidden type="number" value="{{ activity.accessibility }}" name='accessibility'>
+            <input hidden type="number" value="{{ activity.price }}" name='price'>
+            <input hidden type="text" value="{{ activity.link }}" name='link'>
+            <input hidden type="number" value="{{ user_id }}" name="user_id">
+            <input type="submit">
+        </form>
+        <h1>The random activity:</h1>
+        <h2>{{activity.description}}</h2>
+        <h2>Theme: {{activity.activity_type}}</h2>
+        <h2>Social Rank: {{activity.participants}}/10</h2>
+        <h2>Acessibility Rank: {{activity.accessibility}}/100</h2>
+        <h2>Cost Rank: {{activity.price}}/100</h2>
+        <button>Save!</button>
+    </div>
+</div>
 
-    <body>
-        <div id="banner">
-            <div class="container text-center">
-                <h1>Bored?</h1>
-                <h3>Find things to kill your boredom!</h3>
-            </div>
-        </div>
-        <div id="randomactivity">
-            <div>
-                <h1>The random activity:</h1>
-                <h2>{{activity.description}} ({{activity.activity_type}})</h2>
-            </div>
-        </div>
-    </body>
-</html>
+{% endblock %}

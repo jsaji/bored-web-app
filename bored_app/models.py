@@ -40,7 +40,10 @@ class User(db.Model):
         return user
 
     def to_dict(self):
-        return dict(id=self.user_id, email=self.email)
+        return {
+            'user_id':self.user_id,
+            'email':self.email
+        }
 
 class Activity(db.Model):
     __tablename__ = 'activities'
@@ -60,9 +63,20 @@ class Activity(db.Model):
         self.description = description
         self.activity_type = activity_type
         self.participants = participants
-        self.accessibility = (int)(accessibility * 10)
-        self.price = (int)(price * 100)
+        self.accessibility = accessibility
+        self.price = price
         self.link = link
+
+    def to_dict(self):
+        return {
+            'activity_id':self.activity_id,
+            'description':self.description,
+            'activity_type':self.activity_type,
+            'participants': self.participants,
+            'accessibility':self.accessibility,
+            'price':self.price,
+            'link':self.link
+        }
 
 
 class UserActivity(db.Model):
@@ -77,3 +91,13 @@ class UserActivity(db.Model):
     def __init__(self, user_id, activity_id, **kwargs):
         self.user_id = user_id
         self.activity_id = activity_id
+    
+    def to_dict(self):
+        return {
+            'user_id':self.user_id,
+            'user_activity_id':self.user_activity_id,
+            'activity_id': self.activity_id,
+            'is_completed':self.is_completed,
+            'date_added':self.date_added
+        }
+
