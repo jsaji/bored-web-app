@@ -3,7 +3,7 @@
 
 <div id="loginsection">
     <div class="container-fluid mx-3 my-1">
-        <div class="card mx-auto w-75" >
+        <div class="card mx-auto w-75">
             <article class="card-body">
                 <form action="{{ url_for('login') }}" method="POST">
                     <div class="form-group">
@@ -21,6 +21,16 @@
                         <p class="message">Not registered? <a href="{{ url_for('register') }}">Create an account</a></p>
                     </div>
                 </form>
+                {% if error_msgs|count > 0 %}
+                {% for err in error_msgs %}
+                <div class="alert alert-danger" role="alert">
+                    {{err}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+                {% endif %}
             </article>
         </div>
     </div>

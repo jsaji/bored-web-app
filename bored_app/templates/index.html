@@ -3,25 +3,25 @@
 
 <div id="randomactivity">
     <div class="container-fluid text-center">
-        <form action="{{ url_for('index') }}" method="GET">
-            <button type="submit" class="btn btn-success btn-lg btn-block mb-3">Get another activity!</button>
+        <form action="{{ url_for('index') }}" method="GET" class="">
+            <button type="submit" class="btn w-75 mx-auto btn-success btn-lg btn-block mb-3">Get another activity!</button>
         </form>
         <form action="{{ url_for('add_activity') }}" method="POST">
-            <input hidden type="number" value="{{ activity.activity_id }}" name='activity_id'>
-            <input hidden type="text" value="{{ activity.description }}" name='description'>
-            <input hidden type="text" value="{{ activity.activity_type }}" name='activity_type'>
-            <input hidden type="number" value="{{ activity.participants }}" name='participants'>
-            <input hidden type="number" value="{{ activity.accessibility }}" name='accessibility'>
-            <input hidden type="number" value="{{ activity.price }}" name='price'>
-            <input hidden type="text" value="{{ activity.link }}" name='link'>
+            <input hidden type="number" value="{{ activity['activity_id'] }}" name='activity_id'>
+            <input hidden type="text" value="{{ activity['description'] }}" name='description'>
+            <input hidden type="text" value="{{ activity['activity_type'] }}" name='activity_type'>
+            <input hidden type="number" value="{{ activity['participants'] }}" name='participants'>
+            <input hidden type="number" value="{{ activity['accessibility'] }}" name='accessibility'>
+            <input hidden type="number" value="{{ activity['price'] }}" name='price'>
+            <input hidden type="text" value="{{ activity['link'] }}" name='link'>
             
-            <div class="card bg-info text-white text-center">
+            <div class="card mx-auto w-75 bg-info text-white text-center">
                 <div class="card-body">
-                    <h5 class="card-title display" style="font-size:xxx-large;">{{activity.description}}</h5>
-                    <p class="card-text" style="font-size:x-large">Theme: {{activity.activity_type}}</p>
-                    <p class="card-text" style="font-size:x-large;">Social Rank: {{activity.participants}}/10</p>
-                    <p class="card-text" style="font-size:x-large;">Acessibility Rank: {{activity.accessibility}}/100</p>
-                    <p class="card-text" style="font-size:x-large;">Cost Rank: {{activity.price}}/100</p>
+                    <h5 class="card-title display" style="font-size:xxx-large;">{{activity['description']}}</h5>
+                    <p class="card-text" style="font-size:x-large">Theme: {{activity['activity_type']}}</p>
+                    <p class="card-text" style="font-size:x-large;">Social Rank: {{activity['participants']}}</p>
+                    <p class="card-text" style="font-size:x-large;">Acessibility Rank: {{activity['accessibility']}}/10</p>
+                    <p class="card-text" style="font-size:x-large;">Price Rank: {{activity['price']}}/100</p>
                 </div>
                 <div class="card-footer ">
                     <button type="submit" class="btn btn-primary btn-lg">Save!</button>
@@ -29,6 +29,16 @@
             </div>
         </form>
 
+        <div class="my-5 w-75 mx-auto">
+            <h2>About Bored.</h2>
+            <p>Ever feel like you're so bored when you've run out of things to do?
+            Well, that's where this nifty web app comes in!</p>
+            <p>Look at random activities that you could do to spruce up your day.</p>
+            <p>Create an account and you can save them for later, and mark them off when you complete them!</p>
+            <p>Each activity has a theme, a social rank (the number of people that could be involved),
+                accessibility rank (how possible it is to do, 0 being the most possible),
+                and price rank (how much it relatively costs, 0 being free).</p>
+        </div>
     </div>
 </div>
 

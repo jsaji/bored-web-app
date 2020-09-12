@@ -16,7 +16,10 @@
             <a class="navbar-brand" href="{{ url_for('index') }}">Bored.</a>
         
             <div class="collapse navbar-collapse" id="navbarColor01">
-              <ul class="navbar-nav mr-auto">
+              <ul class="navbar-nav ml-auto text-white">
+                {% if session.get('email') %}
+                  <li>Logged in as: <strong>{{session['email']}}</strong> </li>
+                {% endif %}
               </ul>
               
                 {% if session.get('logged_in') %}

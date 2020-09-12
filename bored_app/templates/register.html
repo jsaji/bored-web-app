@@ -25,11 +25,21 @@
                         <p class="message">Already registered? <a href="{{ url_for('login') }}">Sign In</a></p>
                     </div>
                 </form>
+                <div>
+                    {% if error_msgs|count > 0 %}
+                        {% for err in error_msgs %}
+                        <div class="alert alert-danger" role="alert">
+                            {{err}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             </article>
         </div>
     </div>
 </div>
-
-
 
 {% endblock %}

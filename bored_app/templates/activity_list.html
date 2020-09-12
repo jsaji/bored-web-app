@@ -20,9 +20,9 @@
                                 </form>
                                 <h5 class="card-title">{{activities[j]['description']}}</h5>
                                 <p class="card-text">Theme: {{activities[j]['activity_type']}}</p>
-                                <p class="card-text">Social Rank: {{activities[j]['participants']}}/10</p>
-                                <p class="card-text">Acessibility Rank: {{activities[j]['accessibility']}}/100</p>
-                                <p class="card-text">Cost Rank: {{activities[j]['price']}}/100</p>
+                                <p class="card-text">Social Rank: {{activities[j]['participants']}}</p>
+                                <p class="card-text">Acessibility Rank: {{activities[j]['accessibility']}}/10</p>
+                                <p class="card-text">Price Rank: {{activities[j]['price']}}/100</p>
                                 
                             </div>
                             <div class="card-footer ">
@@ -44,7 +44,10 @@
             {% endfor %}
         </div> 
         {% else %}
-            <h2>save some activities lol</h2>
+        <div class="m-auto text-center">
+            <h2 class="my-10">You have no saved activities yet!</h2>
+        </div>
+            
         {% endif %}
     </div>
 </div>
