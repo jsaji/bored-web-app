@@ -6,13 +6,13 @@ app.py
 
 import requests
 from flask import Flask, render_template, request, jsonify, session
-from .models import Activity, User, UserActivity, db
+from models import Activity, User, UserActivity, db
 from sqlalchemy import exc
 from flask_session import Session
 
 # Intialises the app
 web_app = Flask(__name__)
-web_app.config.from_object('bored_app.config.BaseConfig')
+web_app.config.from_object('config.BaseConfig')
 db.init_app(web_app)
 Session(web_app)
 BASE_URL = 'https://www.boredapi.com/api/activity'
@@ -254,3 +254,6 @@ def map_activity_model(raw_activity):
         'price':  raw_activity['price'],
         'link': raw_activity['link']
     }
+
+if __name__ == '__main__':
+    web_app.run()
