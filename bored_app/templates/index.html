@@ -15,13 +15,13 @@
             <input hidden type="number" value="{{ activity.price }}" name='price'>
             <input hidden type="text" value="{{ activity.link }}" name='link'>
             
-            <div class="card text-center">
+            <div class="card bg-info text-white text-center">
                 <div class="card-body">
-                    <h5 class="card-title display">{{activity.description}}</h5>
-                    <p class="card-text">Theme: {{activity.activity_type}}</p>
-                    <p class="card-text">Social Rank: {{activity.participants}}/10</p>
-                    <p class="card-text">Acessibility Rank: {{activity.accessibility}}/100</p>
-                    <p class="card-text">Cost Rank: {{activity.price}}/100</p>
+                    <h5 class="card-title display" style="font-size:xxx-large;">{{activity.description}}</h5>
+                    <p class="card-text" style="font-size:x-large">Theme: {{activity.activity_type}}</p>
+                    <p class="card-text" style="font-size:x-large;">Social Rank: {{activity.participants}}/10</p>
+                    <p class="card-text" style="font-size:x-large;">Acessibility Rank: {{activity.accessibility}}/100</p>
+                    <p class="card-text" style="font-size:x-large;">Cost Rank: {{activity.price}}/100</p>
                 </div>
                 <div class="card-footer ">
                     <button type="submit" class="btn btn-primary btn-lg">Save!</button>

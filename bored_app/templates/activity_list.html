@@ -7,13 +7,17 @@
         <div class="row row-cols-1 row-cols-md-3">
             {% for j in range(activities|count) %}
                 <div class="col mb-4">
-                    {% if user_activities[j]['completed'] in (True, 'true') %}
-                    <div class="card bg-success" style="width: 30rem;">
+                    {% if user_activities[j]['is_completed'] %}
+                    <div class="card bg-success text-white">
                     {% else %}
-                    <div class="card" style="width: 30rem;">
+                    <div class="card bg-info text-white">
                     {% endif %}
                         <div class="text-center">
                             <div class="card-body">
+                                <form method="POST" action="{{ url_for('remove_activity') }}">
+                                    <input hidden value="{{ user_activities[j]['user_activity_id'] }}" name="user_activity_id">
+                                    <button type="submit" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </form>
                                 <h5 class="card-title">{{activities[j]['description']}}</h5>
                                 <p class="card-text">Theme: {{activities[j]['activity_type']}}</p>
                                 <p class="card-text">Social Rank: {{activities[j]['participants']}}/10</p>
@@ -22,8 +26,17 @@
                                 
                             </div>
                             <div class="card-footer ">
-                                <a href="#" class="btn btn-primary">Complete</a>
-                                <a href="#" class="btn btn-danger">Remove</a>
+
+                                <form method="POST" action="{{ url_for('complete_activity') }}">
+                                    <input hidden value="{{ user_activities[j]['user_activity_id'] }}" name="user_activity_id">
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        {% if user_activities[j]['is_completed'] %}
+                                        Uncomplete
+                                        {% else %}
+                                        Complete
+                                        {% endif %}
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

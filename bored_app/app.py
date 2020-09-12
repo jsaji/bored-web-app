@@ -120,6 +120,7 @@ def activity_list():
         for u, ua, a in results:
             user_activities.append(ua.to_dict())
             activities.append(a.to_dict())
+            print(ua.to_dict())
         return render_template('activity_list.html', activities=activities, user_activities=user_activities, title=title, subtitle=subtitle)
 
     return login()
@@ -130,21 +131,26 @@ def add_activity():
     """ Add activity to user's list of saved activities """
     try:
         data = request.form
-        activity = Activity(**data)
-        if session.get('user_id'):
-            user_activity = UserActivity(**data, user_id=session['user_id'])
-            activity = Activity.query.get(data['activity_id'])
-            if activity is None:
-                activity = Activity(**data)
-                db.session.add(activity)
-                db.session.commit()
-            db.session.add(user_activity)
-            db.session.commit()
-        else:
-            session['temp_activity_id'] = activity.activity_id
-            return login()
+        if data.get('activity_id'):
+            session['temp_activity_id'] = data['activity_id']
+            if session.get('user_id'):
+                user_activity = UserActivity.query.filter_by(activity_id=data['activity_id'], user_id=session['user_id']).first()
+                if user_activity is None:
+                    user_activity = UserActivity(activity_id=data['activity_id'], user_id=session['user_id'])
+                    activity = Activity.query.get(data['activity_id'])
+                    if activity is None:
+                        activity = Activity(**data)
+                        db.session.add(activity)
+                        db.session.commit()
+                    db.session.add(user_activity)
+                    db.session.commit()
+            else:
+                session['temp_activity_id'] = activity.activity_id
+                return login()
     except exc.SQLAlchemyError as e:
         db.session.rollback()
+        print(e.args)
+    except Exception as e:
         print(e.args)
     return index()
 
@@ -153,13 +159,17 @@ def add_activity():
 def remove_activity():
     """ Remove activity from user's list of saved activities """
     try:
-        data = request.get_json()
-        user_activity = UserActivity.query.get(data['user_activity_id'])
-        if user_activity is not None:
-            db.session.remove(user_activity)
-            db.session.commit()
+        data = request.form
+        if data.get('user_activity_id'):
+            user_activity = UserActivity.query.get(data['user_activity_id'])
+            if user_activity is not None:
+                print(user_activity.to_dict())
+                db.session.delete(user_activity)
+                db.session.commit()
     except exc.SQLAlchemyError as e:
         db.session.rollback()
+        print(e.args)
+    except Exception as e:
         print(e.args)
 
     return activity_list()
@@ -169,13 +179,16 @@ def remove_activity():
 def complete_activity():
     """ Complete an activity on user's list of saved activities """
     try:
-        data = request.get_json()
-        user_activity = UserActivity.query.get(data['user_activity_id'])
-        if user_activity is not None:
-            user_activity.is_completed = True
-            db.session.commit()
+        data = request.form
+        if data.get('user_activity_id'):
+            user_activity = UserActivity.query.get(data['user_activity_id'])
+            if user_activity is not None:
+                user_activity.is_completed = not user_activity.is_completed
+                db.session.commit()
     except exc.SQLAlchemyError as e:
         db.session.rollback()
+        print(e.args)
+    except Exception as e:
         print(e.args)
 
     return activity_list()

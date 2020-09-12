@@ -1,15 +1,32 @@
 {% extends 'header.html' %}
 {% block content %}
 
-<div id="loginsection">
-    <div class="">
-        <form action="{{ url_for('register') }}" method="POST">
-            <input type="email" name="email" placeholder="Email">
-            <input type="password" name="password" placeholder="Password">
-            <input type="password" name="confirm_password" placeholder="Confirm Password">
-            <button type="submit" class="btn btn-primary">Register</button>
-            <p class="message">Already registered? <a href="{{ url_for('login') }}">Sign In</a></p>
-        </form>
+<div id="registersection">
+    <div class="container-fluid mx-3 my-1">
+        <div class="card mx-auto w-75" >
+            <article class="card-body">
+                <form action="{{ url_for('register') }}" method="POST">
+                    <div class="form-group">
+                        <label>Your email</label>
+                        <input name="email" class="form-control" placeholder="Email" value="{{ email }}" type="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Your password</label>
+                        <input name="password" class="form-control" placeholder="******" type="password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm password</label>
+                        <input name="confirm_password" class="form-control" placeholder="******" type="password">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block"> Register </button>
+                    </div>
+                    <div class="form-group text-center">
+                        <p class="message">Already registered? <a href="{{ url_for('login') }}">Sign In</a></p>
+                    </div>
+                </form>
+            </article>
+        </div>
     </div>
 </div>
 

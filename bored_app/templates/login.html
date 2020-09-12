@@ -1,14 +1,28 @@
 {% extends 'header.html' %}
 {% block content %}
 
-<div id="login">
-    <div class="">
-        <form action="{{ url_for('login') }}" method="POST">
-            <input type="email" name="email" placeholder="Email" value="{{ email }}">
-            <input type="password" name="password" placeholder="Password">
-            <button type="submit" class="btn btn-primary">Login</button>
-            <p class="message">Not registered? <a href="{{ url_for('register') }}">Create an account</a></p>
-        </form>
+<div id="loginsection">
+    <div class="container-fluid mx-3 my-1">
+        <div class="card mx-auto w-75" >
+            <article class="card-body">
+                <form action="{{ url_for('login') }}" method="POST">
+                    <div class="form-group">
+                        <label>Your email</label>
+                        <input name="email" class="form-control" placeholder="Email" value="{{ email }}" type="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Your password</label>
+                        <input name="password" class="form-control" placeholder="******" type="password">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block"> Login </button>
+                    </div>
+                    <div class="form-group text-center">
+                        <p class="message">Not registered? <a href="{{ url_for('register') }}">Create an account</a></p>
+                    </div>
+                </form>
+            </article>
+        </div>
     </div>
 </div>
 
