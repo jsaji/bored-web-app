@@ -2,7 +2,10 @@
 {% block content %}
 
 <div id="randomactivity">
-    <div class="">
+    <div class="container-fluid text-center">
+        <form action="{{ url_for('index') }}" method="GET">
+            <button type="submit" class="btn btn-success btn-lg btn-block mb-3">Get another activity!</button>
+        </form>
         <form action="{{ url_for('add_activity') }}" method="POST">
             <input hidden type="number" value="{{ activity.activity_id }}" name='activity_id'>
             <input hidden type="text" value="{{ activity.description }}" name='description'>
@@ -11,16 +14,21 @@
             <input hidden type="number" value="{{ activity.accessibility }}" name='accessibility'>
             <input hidden type="number" value="{{ activity.price }}" name='price'>
             <input hidden type="text" value="{{ activity.link }}" name='link'>
-            <input hidden type="number" value="{{ user_id }}" name="user_id">
-            <input type="submit">
+            
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title display">{{activity.description}}</h5>
+                    <p class="card-text">Theme: {{activity.activity_type}}</p>
+                    <p class="card-text">Social Rank: {{activity.participants}}/10</p>
+                    <p class="card-text">Acessibility Rank: {{activity.accessibility}}/100</p>
+                    <p class="card-text">Cost Rank: {{activity.price}}/100</p>
+                </div>
+                <div class="card-footer ">
+                    <button type="submit" class="btn btn-primary btn-lg">Save!</button>
+                </div>
+            </div>
         </form>
-        <h1>The random activity:</h1>
-        <h2>{{activity.description}}</h2>
-        <h2>Theme: {{activity.activity_type}}</h2>
-        <h2>Social Rank: {{activity.participants}}/10</h2>
-        <h2>Acessibility Rank: {{activity.accessibility}}/100</h2>
-        <h2>Cost Rank: {{activity.price}}/100</h2>
-        <button>Save!</button>
+
     </div>
 </div>
 

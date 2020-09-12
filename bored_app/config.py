@@ -11,5 +11,7 @@ class BaseConfig(object):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = db_link
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SESSION_TYPE = 'filesystem'
+    SESSION_PERMANENT = False
 
     

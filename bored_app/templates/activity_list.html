@@ -1,15 +1,38 @@
 {% extends 'header.html' %}
 {% block content %}
 
-<div id="randomactivity">
-    <div class="">
-        <h1>The random activity:</h1>
-        <h2>{{activity.description}}</h2>
-        <h2>Theme: {{activity.activity_type}}</h2>
-        <h2>Social Rank: {{activity.participants}}/10</h2>
-        <h2>Acessibility Rank: {{activity.participants}}/100</h2>
-        <h2>Cost Rank: {{activity.participants}}/100</h2>
-        <button>Save!</button>
+<div id="activity_list">
+    <div class="container-fluid">
+        {% if activities %}
+        <div class="row row-cols-1 row-cols-md-3">
+            {% for j in range(activities|count) %}
+                <div class="col mb-4">
+                    {% if user_activities[j]['completed'] in (True, 'true') %}
+                    <div class="card bg-success" style="width: 30rem;">
+                    {% else %}
+                    <div class="card" style="width: 30rem;">
+                    {% endif %}
+                        <div class="text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">{{activities[j]['description']}}</h5>
+                                <p class="card-text">Theme: {{activities[j]['activity_type']}}</p>
+                                <p class="card-text">Social Rank: {{activities[j]['participants']}}/10</p>
+                                <p class="card-text">Acessibility Rank: {{activities[j]['accessibility']}}/100</p>
+                                <p class="card-text">Cost Rank: {{activities[j]['price']}}/100</p>
+                                
+                            </div>
+                            <div class="card-footer ">
+                                <a href="#" class="btn btn-primary">Complete</a>
+                                <a href="#" class="btn btn-danger">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div> 
+        {% else %}
+            <h2>save some activities lol</h2>
+        {% endif %}
     </div>
 </div>
 

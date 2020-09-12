@@ -9,16 +9,27 @@ import requests
 from flask import Flask, render_template, request, jsonify, session
 from .models import Activity, User, UserActivity, db
 from sqlalchemy import exc
+from flask_session import Session
 
 web_app = Flask(__name__)
 web_app.config.from_object('bored_app.config.BaseConfig')
 db.init_app(web_app)
+Session(web_app)
+BASE_URL = 'https://www.boredapi.com/api/activity'
 
 @web_app.route("/")
 def index():
     """ Home page """
-    r = requests.get('https://www.boredapi.com/api/activity')
+    title = "Bored?"
+    subtitle = "Find things to kill your boredom!"
+    if session.get('temp_activity_id'):
+        temp_activity_id = session['temp_activity_id']
+        session.pop('temp_activity_id', None)
+        r = requests.get(BASE_URL, params={'key':temp_activity_id})
+    else:
+        r = requests.get(BASE_URL)
     activity_data = map_activity_model(r.json())
+    activity_data['activity_type'] = activity_data['activity_type'].capitalize()
     activity_data['accessibility'] = int(round(activity_data['accessibility'] * 10))
     activity_data['price'] = int(round(activity_data['price'] * 100))
     activity = Activity(**activity_data)
@@ -26,50 +37,55 @@ def index():
         user_id = session['user_id']
     else:
         user_id = None
-    return render_template("index.html", activity=activity, user_id=user_id)
+    return render_template("index.html", activity=activity, user_id=user_id, title=title, subtitle=subtitle)
 
 
 @web_app.route("/register", methods=['GET', 'POST'])
 def register():
     """ Register page for new users """
     if request.method == 'GET':
-        return "<h1> coming soon </h1>"
-    else:
-        try:
-            data = request.get_json()
-            user = User(**data)
-            db.session.add(user)
-            db.session.commit()
-            return jsonify(user.to_dict), 201
-        except exc.SQLAlchemyError as e:
-            db.session.rollback()
-            return jsonify({'message': e.args}), 500
+        return render_template("register.html", title="Register")
+    
+    try:
+        data = request.form
+        user = User(**data)
+        db.session.add(user)
+        db.session.commit()
+        session['logged_in'] = True
+        session['user_id'] = user.user_id
+        session['email'] = data['email']
+        return index()
+    except exc.SQLAlchemyError as e:
+        db.session.rollback()
+        return register()
 
 
 @web_app.route("/login", methods=['GET', 'POST'])
 def login():
     """ Login page for existing users """
     if request.method == 'GET':
-        if session.get('user_id'):
-            user_id = session['user_id']
-        else:
-            user_id = None
-        return render_template("login.html", user_id=user_id)
+        return render_template("login.html", email='', title="Login")
     else:
         data = request.form
-        user = User.authenticate(**data)
+        valid_user = User.authenticate(**data)
 
-        if not user:
-            return render_template("login.html", user_id=data['user_id'])
+        if not valid_user:
+            email = ''
+            if data.get('email'): email = data['email']
+            return render_template("login.html", email=email)
 
+        user = User.query.filter_by(email=data['email']).first()
         session['logged_in'] = True
-        session['user_id'] = data['user_id']
+        session['user_id'] = user.user_id
+        session['email'] = data['email']
         return index()
 
-@web_app.route("/logout", methods=['POST'])
+@web_app.route("/logout", methods=['GET'])
 def logout():
     session.pop('logged_in', None)
+    session.pop('email', None)
     session.pop('user_id', None)
+    session.pop('temp_activity_id', None)
     return index()
 
 @web_app.route("/profile", methods=['GET'])
@@ -77,7 +93,7 @@ def profile():
     """ Profile page for existing users to view their details """
     if session.get('user_id') and session.get('logged_in'):
         user = User.query.get(session['user_id'])
-        return render_template("profile.html", user=user)
+        return render_template("profile.html", user=user, title="My Profile")
     return login()
 
 
@@ -89,17 +105,24 @@ def edit_profile():
 
 @web_app.route("/activity_list", methods=['GET', 'POST'])
 def activity_list():
-    user_id = 21 # get it somehow lol
-    results = db.session.query(User, UserActivity, Activity).\
-                filter(User.user_id==UserActivity.user_id).\
-                filter(UserActivity.activity_id==Activity.activity_id).\
-                filter(User.user_id==user_id).\
-                all()
-    activities = []
-    for u, ua, a in results:
-        activities.append(ua)
     """ Activity list page for users to see the activities they have saved """
-    return "<h1> coming soon </h1>"
+    if session.get('user_id'):
+        title = "Saved Activities"
+        subtitle = "Add more things to your list and complete them"
+        user_id = session['user_id']
+        results = db.session.query(User, UserActivity, Activity).\
+                    filter(User.user_id==UserActivity.user_id).\
+                    filter(UserActivity.activity_id==Activity.activity_id).\
+                    filter(User.user_id==user_id).\
+                    all()
+        activities = []
+        user_activities = []
+        for u, ua, a in results:
+            user_activities.append(ua.to_dict())
+            activities.append(a.to_dict())
+        return render_template('activity_list.html', activities=activities, user_activities=user_activities, title=title, subtitle=subtitle)
+
+    return login()
 
 
 @web_app.route("/activity_list/add", methods=['POST'])
@@ -109,7 +132,7 @@ def add_activity():
         data = request.form
         activity = Activity(**data)
         if session.get('user_id'):
-            user_activity = UserActivity(**data)
+            user_activity = UserActivity(**data, user_id=session['user_id'])
             activity = Activity.query.get(data['activity_id'])
             if activity is None:
                 activity = Activity(**data)
@@ -118,6 +141,7 @@ def add_activity():
             db.session.add(user_activity)
             db.session.commit()
         else:
+            session['temp_activity_id'] = activity.activity_id
             return login()
     except exc.SQLAlchemyError as e:
         db.session.rollback()
