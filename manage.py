@@ -7,8 +7,8 @@ manage.py
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
-from bored_app.app import web_app
-from bored_app.models import db, User
+from app import web_app
+from models import db, User
 
 app = web_app
 
